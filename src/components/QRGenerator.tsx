@@ -7,7 +7,7 @@ import { toast } from 'sonner';
 
 const QRGenerator = () => {
   const [url, setUrl] = useState('');
-  const [color, setColor] = useState('#1A1F2C');
+  const [color, setColor] = useState('#9b87f5');
   const [error, setError] = useState('');
 
   const validateURL = (value: string) => {
@@ -62,7 +62,7 @@ const QRGenerator = () => {
       
       <div className="flex justify-center">
         {url && !error && (
-          <div className="p-6 bg-[#F6F6F7] rounded-lg shadow-md">
+          <div className="p-6 bg-[#F1F0FB] rounded-lg shadow-md">
             <QRCodeSVG
               id="qr-code"
               value={url}
@@ -78,7 +78,7 @@ const QRGenerator = () => {
       <Button
         onClick={downloadQR}
         disabled={!url || !!error}
-        className="w-full bg-[#1A1F2C] hover:bg-[#403E43] text-white transition-colors"
+        className="w-full bg-[#9b87f5] hover:bg-[#7E69AB] text-white transition-colors"
       >
         تحميل الباركود
       </Button>
