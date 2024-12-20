@@ -1,11 +1,14 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import QRGenerator from "@/components/QRGenerator";
 
 const Index = () => {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-gray-600">Start building your amazing project here!</p>
+    <div className="min-h-screen bg-gradient-to-b from-white to-qr-secondary py-12">
+      <div className="container">
+        <div className="text-center mb-12">
+          <h1 className="text-4xl font-bold text-qr-text mb-4">مولد الباركود</h1>
+          <p className="text-gray-600">قم بإنشاء باركود خاص بك في ثوانٍ معدودة</p>
+        </div>
+        <QRGenerator />
       </div>
     </div>
   );
