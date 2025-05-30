@@ -1,0 +1,4 @@
+Flask
+python-docx
+WeasyPrint
+BeautifulSoup4

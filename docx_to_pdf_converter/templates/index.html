@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>DOCX to PDF Converter</title>
+</head>
+<body>
+    <h1>Upload DOCX and Cover Image</h1>
+    <form method="POST" action="/upload" enctype="multipart/form-data">
+        <label for="word_file">Word Document (.docx):</label><br>
+        <input type="file" id="word_file" name="word_file" accept=".docx"><br><br>
+        
+        <label for="cover_image">Cover Image (.jpg, .jpeg, .png):</label><br>
+        <input type="file" id="cover_image" name="cover_image" accept=".jpg, .jpeg, .png"><br><br>
+        
+        <input type="submit" value="Upload">
+    </form>
+</body>
+</html>

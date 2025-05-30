@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Preview</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        .page-break {
+            page-break-before: always;
+        }
+        @media print {
+            .page-break {
+                page-break-before: always;
+            }
+        }
+        body {
+            font-family: 'Cairo', sans-serif;
+        }
+        #cover-image-placeholder.no-cover, 
+        #toc-placeholder.no-toc {
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 1px dashed #ccc;
+            text-align: center;
+            color: #777;
+            min-height: 200px; /* Ensure placeholder is visible */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .chapter-anchor { /* Helper for scrolling to chapter */
+            display: block;
+            position: relative;
+            top: -50px; /* Adjust as needed for fixed headers */
+            visibility: hidden;
+        }
+    </style>
+</head>
+<body dir="rtl" class="bg-gray-100"> 
+
+    <!-- Cover Image Section -->
+    <div id="cover-image-section">
+        {% if cover_image_filename %}
+            <img src="{{ url_for('static', filename='uploads/' + cover_image_filename) }}" alt="Cover Image" class="w-full h-screen object-cover">
+        {% else %}
+            <div id="cover-image-placeholder" class="no-cover w-full h-screen flex items-center justify-center bg-gray-200">
+                <p class="text-2xl text-gray-500">No cover image uploaded.</p>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Table of Contents Section -->
+    <div id="toc-section" class="page-break px-8 md:px-16 lg:px-24 py-12 bg-white shadow-lg my-8">
+        <h1 class="text-3xl md:text-4xl font-bold my-6 text-center text-gray-800">الفهرس</h1>
+        {% if toc_items and toc_items|length > 0 %}
+            <ul class="list-none space-y-1">
+            {% for item in toc_items %}
+                {% if item.level == 1 %}
+                    <li class="my-2">
+                        <a href="#{{ item.id }}" class="block text-xl font-semibold py-2 text-blue-700 hover:text-blue-900 transition-colors duration-150">
+                            {{ item.text }}
+                        </a>
+                    </li>
+                {% elif item.level == 2 %}
+                    <li class="ml-6 my-1">
+                        <a href="#{{ item.id }}" class="block text-lg py-1 text-gray-700 hover:text-gray-900 transition-colors duration-150">
+                            {{ item.text }}
+                        </a>
+                    </li>
+                {% elif item.level == 3 %}
+                    <li class="ml-12 my-1">
+                        <a href="#{{ item.id }}" class="block text-md text-gray-600 hover:text-gray-800 transition-colors duration-150">
+                            {{ item.text }}
+                        </a>
+                    </li>
+                {% else %}
+                     <li class="ml-16"> 
+                        <a href="#{{ item.id }}" class="block text-sm text-gray-500 hover:text-gray-700 transition-colors duration-150">
+                            {{ item.text }}
+                        </a>
+                    </li>
+                {% endif %}
+            {% endfor %}
+            </ul>
+        {% else %}
+            <div id="toc-placeholder" class="no-toc py-10">
+                 <p class="text-xl text-gray-500">No headings found to generate Table of Contents.</p>
+                 {% if word_file_name %}
+                 <p class="mt-2 text-gray-600">The uploaded Word document '{{ word_file_name }}' might not contain any recognized heading styles (Heading 1, Heading 2, Heading 3).</p>
+                 {% endif %}
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Chapters Container -->
+    <div id="chapters-container" class="px-4 md:px-8 lg:px-16 py-8">
+        {% if chapters_data and chapters_data|length > 0 %}
+            {% for chapter in chapters_data %} {# H1 Level #}
+                <div class="page-break bg-white shadow-md rounded-lg p-6 md:p-8 my-6">
+                    <span id="{{ chapter.id }}" class="chapter-anchor"></span>
+                    <h1 class="text-2xl md:text-3xl font-bold mt-4 mb-5 text-blue-800 border-b-2 border-blue-200 pb-2">{{ chapter.title }}</h1>
+                    {% if chapter.images_after %}
+                        {% for image_filename in chapter.images_after %}
+                            <img src="{{ url_for('static', filename='uploads/' + image_filename) }}" alt="Content Image for {{ chapter.title }}" class="my-4 rounded-xl shadow-md max-w-full lg:max-w-2xl mx-auto">
+                        {% endfor %}
+                    {% endif %}
+                    {% for para_obj in chapter.paragraphs %}
+                        <p class="text-base md:text-lg my-2 leading-relaxed text-gray-700">{{ para_obj.text }}</p>
+                        {% if para_obj.images_after %}
+                            {% for image_filename in para_obj.images_after %}
+                                <img src="{{ url_for('static', filename='uploads/' + image_filename) }}" alt="Content Image" class="my-4 rounded-xl shadow-md max-w-full lg:max-w-2xl mx-auto">
+                            {% endfor %}
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if chapter.children %} {# H2 Level #}
+                        {% for section in chapter.children %}
+                            <div class="mt-6 ml-4 md:ml-6">
+                                <span id="{{ section.id }}" class="chapter-anchor"></span>
+                                <h2 class="text-xl md:text-2xl font-semibold mt-4 mb-3 text-gray-800 border-b border-gray-300 pb-1">{{ section.title }}</h2>
+                                {% if section.images_after %}
+                                    {% for image_filename in section.images_after %}
+                                        <img src="{{ url_for('static', filename='uploads/' + image_filename) }}" alt="Content Image for {{ section.title }}" class="my-4 rounded-xl shadow-md max-w-full lg:max-w-xl mx-auto">
+                                    {% endfor %}
+                                {% endif %}
+                                {% for para_obj in section.paragraphs %}
+                                    <p class="text-base md:text-lg my-2 leading-relaxed text-gray-700">{{ para_obj.text }}</p>
+                                    {% if para_obj.images_after %}
+                                        {% for image_filename in para_obj.images_after %}
+                                            <img src="{{ url_for('static', filename='uploads/' + image_filename) }}" alt="Content Image" class="my-4 rounded-xl shadow-md max-w-full lg:max-w-xl mx-auto">
+                                        {% endfor %}
+                                    {% endif %}
+                                {% endfor %}
+
+                                {% if section.children %} {# H3 Level #}
+                                    {% for subsection in section.children %}
+                                        <div class="mt-5 ml-4 md:ml-6">
+                                            <span id="{{ subsection.id }}" class="chapter-anchor"></span>
+                                            <h3 class="text-lg md:text-xl font-semibold mt-3 mb-2 text-gray-700">{{ subsection.title }}</h3>
+                                            {% if subsection.images_after %}
+                                                {% for image_filename in subsection.images_after %}
+                                                    <img src="{{ url_for('static', filename='uploads/' + image_filename) }}" alt="Content Image for {{ subsection.title }}" class="my-4 rounded-xl shadow-md max-w-full lg:max-w-lg mx-auto">
+                                                {% endfor %}
+                                            {% endif %}
+                                            {% for para_obj in subsection.paragraphs %}
+                                                <p class="text-base my-2 leading-relaxed text-gray-600">{{ para_obj.text }}</p
+                                                {% if para_obj.images_after %}
+                                                    {% for image_filename in para_obj.images_after %}
+                                                        <img src="{{ url_for('static', filename='uploads/' + image_filename) }}" alt="Content Image" class="my-4 rounded-xl shadow-md max-w-full lg:max-w-lg mx-auto">
+                                                    {% endfor %}
+                                                {% endif %}
+                                            {% endfor %}
+                                        </div>
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            {% endfor %}
+        {% elif error_message %}
+            {# Handled by the error block below #}
+        {% else %}
+            <div class="bg-white shadow-md rounded-lg p-8 my-6 text-center">
+                <p class="text-xl text-gray-500">No chapter content to display.</p>
+                {% if word_file_name %}
+                <p class="mt-2 text-gray-600">The document '{{ word_file_name }}' might be empty or could not be processed for chapter extraction.</p>
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+    
+    {% if error_message %}
+    <div class="fixed bottom-0 left-0 right-0 bg-red-100 border-t-4 border-red-500 text-red-700 px-4 py-3 shadow-md" role="alert">
+        <div class="flex">
+            <div class="py-1"><svg class="fill-current h-6 w-6 text-red-500 mr-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M2.93 17.07A10 10 0 1 1 17.07 2.93 10 10 0 0 1 2.93 17.07zM9 5v6h2V5H9zm0 8v2h2v-2H9z"/></svg></div>
+            <div>
+                <p class="font-bold">Processing Error</p>
+                <p class="text-sm">{{ error_message }}</p>
+                <a href="{{ url_for('index') }}" class="mt-2 inline-block bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-3 rounded text-xs">
+                    Back to Upload
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+</body>
+</html>
