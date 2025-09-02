@@ -1,32 +1,37 @@
-import QRGenerator from "@/components/QRGenerator";
+import WhatsAppButton from "@/components/WhatsAppButton";
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#F2FCE2] to-[#E2FFD3] relative">
-      <div className="container">
-        <div className="text-center py-8">
-          <h1 className="text-2xl md:text-3xl font-bold text-[#2E7D32] mb-2">
-            شركة جرين لايت لتكنولوجيا والتطوير
+    <div dir="rtl" className="flex flex-col min-h-screen bg-brand-secondary font-sans text-brand-text">
+      <WhatsAppButton />
+      {/* Header */}
+      <header className="py-10 bg-white border-b border-gray-200">
+        <div className="container mx-auto text-center px-4">
+          <h1 className="text-5xl md:text-6xl font-serif font-bold tracking-tight text-brand-text">
+            ابو البنات
           </h1>
-          <div className="text-center mb-12">
-            <h2 className="text-xl md:text-2xl font-bold text-[#388E3C] mb-4">مولد الباركود</h2>
-            <p className="text-[#4CAF50]">قم بإنشاء باركود خاص بك في ثوانٍ معدودة</p>
-          </div>
+          <p className="mt-3 text-lg text-gray-500">
+            أسعار مميزة، جودة عالية
+          </p>
         </div>
-        <QRGenerator />
-      </div>
-      
-      {/* Footer Section */}
-      <div className="absolute bottom-0 left-0 right-0 p-4 bg-[#F2FCE2] border-t border-[#2E7D32]/20">
-        <div className="container mx-auto flex justify-between items-center text-[#2E7D32]">
-          <div className="text-sm">
-            Gm.محمد مصطفي
-          </div>
-          <div className="text-sm">
-            جميع الحقوق محفوظة &copy; {new Date().getFullYear()} Green Light
-          </div>
+      </header>
+
+      {/* Main Content Area */}
+      <main className="flex-grow container mx-auto py-16 text-center px-4">
+        <div className="text-center">
+          <h2 className="text-3xl font-semibold text-gray-800 font-serif">المنتجات ستضاف قريباً</h2>
+          <p className="mt-4 text-gray-600 max-w-xl mx-auto">
+            نحن نعمل حالياً على تجهيز تشكيلة فريدة من الملابس والإكسسوارات. تابعونا لمعرفة كل جديد!
+          </p>
         </div>
-      </div>
+      </main>
+
+      {/* Footer */}
+      <footer className="bg-white border-t border-gray-200">
+        <div className="container mx-auto py-6 text-center text-sm text-gray-500 px-4">
+          <p>&copy; {new Date().getFullYear()} ابو البنات. جميع الحقوق محفوظة.</p>
+        </div>
+      </footer>
     </div>
   );
 };

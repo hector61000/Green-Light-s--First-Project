@@ -18,12 +18,14 @@ export default {
       },
     },
     extend: {
+      fontFamily: {
+        sans: ['"Inter"', 'sans-serif'],
+        serif: ['"Lora"', 'serif'],
+      },
       colors: {
-        qr: {
-          primary: "#0EA5E9",
-          secondary: "#F1F1F1",
-          text: "#222222",
-        },
+        'brand-primary': '#D6AAB8', // A soft, elegant pink/mauve
+        'brand-secondary': '#F5F3F0', // A gentle, warm off-white
+        'brand-text': '#4B4B4B', // A sophisticated charcoal
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
         ring: 'hsl(var(--ring))',
